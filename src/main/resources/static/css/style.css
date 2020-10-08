@@ -1,0 +1,32 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: grey;
+}
+
+td {
+    background-color: darkgrey;
+}
+
+body {
+    background-color: #14213d;
+}
+
+h1 {
+    color: #e5e5e5;
+}
+
+a {
+    color: #fca311;
+}
+
+label {
+    color: darkgrey;
+}
+
+.validation-error-box {
+    color: red;
+}

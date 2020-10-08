@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Create student</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    </head>
+    <body>
+        <form action="#" th:action="@{/create/student}" th:object="${student}" method="post">
+
+            <label>
+                Surname
+                <input type="text" th:field="*{surname}" />
+            </label>
+
+            <div class="validation-error-box" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">surname Error</div>
+
+
+            <br />
+
+            <label>
+                firstName
+                <input type="text" th:field="*{firstName}" />
+            </label>
+
+            <div class="validation-error-box" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName Error</div>
+
+
+            <br />
+
+            <label>
+                patronymic
+                <input type="text" th:field="*{patronymic}" />
+            </label>
+
+            <div class="validation-error-box" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}">patronymic Error</div>
+
+            <br />
+
+            <button type="submit">
+                Create
+            </button>
+
+        </form>
+    </body>
+</html>
