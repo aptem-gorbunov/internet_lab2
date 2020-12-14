@@ -1,45 +1,48 @@
 package com.example._2lab2_8.service;
 
 import com.example._2lab2_8.entity.User;
-import com.example._2lab2_8.repository.IUserRepository;
+import com.example._2lab2_8.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+//@Service
 public class UserService implements IUserService{
 
-    private IUserRepository userRepository;
+    private UserRepository repository;
 
     @Autowired
-    public void setUserRepository(IUserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setRepository(UserRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public Optional<User> findById(long id) {
-        return userRepository.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public User add(User user) {
-        return userRepository.saveAndFlush(user);
+        return repository.saveAndFlush(user);
     }
 
     @Override
     public void delete(long id) {
-        userRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public User edit(User user) {
-        return userRepository.saveAndFlush(user);
+        return repository.saveAndFlush(user);
     }
+
+    //TODO: рекурсия в JSON: https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
 
     @Override
     public List<User> getAll() {
-        return userRepository.findAll();
+        List<User> res = repository.findAll();
+        return res;
     }
 }

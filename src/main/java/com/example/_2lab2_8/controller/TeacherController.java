@@ -18,7 +18,7 @@ public class TeacherController {
 
     //TODO: можно было бы просто 1 контроллер сделать, от которого бы другие наследовались (понятное дело, что универсально назвать методы основные)
 
-    private TeacherService service;
+    private final TeacherService service;
 
     TeacherController(TeacherService service) {
         this.service=service;

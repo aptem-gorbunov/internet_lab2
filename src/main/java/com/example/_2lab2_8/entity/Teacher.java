@@ -1,31 +1,41 @@
 package com.example._2lab2_8.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-public class Teacher {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "teachers")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+@DiscriminatorValue(value="teacher")
+public class Teacher extends Person implements Serializable {
 
-    @Size(min=3, max=30, message = "The surname should be 3-30 symbols")
-    private String surname;
-    @Size(min=3, max=30, message = "The firstName should be 3-30 symbols")
-    private String firstName;
-    @Size(min=3, max=30, message = "The patronymic should be 3-30 symbols")
-    private String patronymic;
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+    private List<TeacherSubject> subjects;
 
+    public Teacher() {
+    }
 
-    private Integer age;
+    public Teacher(List<TeacherSubject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public Teacher(Long id, @Size(min = 3, max = 30, message = "The surname should be 3-30 symbols") String surname, @Size(min = 3, max = 30, message = "The firstName should be 3-30 symbols") String firstName, @Size(min = 3, max = 30, message = "The patronymic should be 3-30 symbols") String patronymic, Integer age, User user, List<TeacherSubject> subjects) {
+        super(id, surname, firstName, patronymic, age, user);
+        this.subjects = subjects;
+    }
+
+    public List<TeacherSubject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<TeacherSubject> subjects) {
+        this.subjects = subjects;
+    }
 }

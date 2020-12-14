@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+
+//TODO: https://memorynotfound.com/spring-security-forgot-password-send-email-reset-password/
+
+//@Slf4j
 //@Controller
 public class MainController {
 
@@ -39,7 +42,7 @@ public class MainController {
     @GetMapping("/teachers")
     public ModelAndView getTeachersPage(Model model) {
 
-        log.info("get teachers page");
+        //log.info("get teachers page");
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("teachers_list");
@@ -50,7 +53,7 @@ public class MainController {
     @GetMapping("/create/teacher")
     public  ModelAndView displayTeacherCreationPage(Model model) {
 
-        log.info("get teacher creation page");
+        //log.info("get teacher creation page");
 
         ModelAndView modelAndView = new ModelAndView("create_teacher");
         Teacher newTeacher = new Teacher();
@@ -61,16 +64,16 @@ public class MainController {
     @PostMapping(value="/create/teacher")
     public String checkTeacherInfo(@Valid Teacher teacher, BindingResult bindingResult) {
 
-        log.info("create new teacher");
+        //log.info("create new teacher");
 
         if (bindingResult.hasErrors()) {
 
-            log.info("validation errors. Cannot create new teacher");
+            //log.info("validation errors. Cannot create new teacher");
 
             return "create_teacher";
         }
 
-        log.info("no validation errors. Can create new teacher");
+        //log.info("no validation errors. Can create new teacher");
 
         teachers.add(teacher);
 

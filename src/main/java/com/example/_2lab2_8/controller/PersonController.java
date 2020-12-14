@@ -1,6 +1,8 @@
 package com.example._2lab2_8.controller;
 
+import com.example._2lab2_8.entity.Person;
 import com.example._2lab2_8.entity.Student;
+import com.example._2lab2_8.service.PersonService;
 import com.example._2lab2_8.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,35 +12,33 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("students")
-public class StudentController {
+@RequestMapping("people")
+public class PersonController {
+    private final PersonService service;
 
-    private final StudentService service;
-
-    StudentController(StudentService service) {
+    PersonController(PersonService service) {
         this.service=service;
     }
 
     @GetMapping("/all")
-    List<Student> getAllStudents() {
-        List<Student> res = service.getAll();
-        return res;
+    List<Person> getAllStudents() {
+        return service.getAll();
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    Student createStudent(@Valid @RequestBody Student newStudent) {
+    Person createStudent(@Valid @RequestBody Person newStudent) {
         return service.add(newStudent);
     }
 
     @GetMapping("/{id}")
-    Optional<Student> getOneStudent(@PathVariable Long id) {
+    Optional<Person> getOneStudent(@PathVariable Long id) {
         return service.findById(id);
     }
 
     //TODO: не так, как должно было быть
     @PutMapping("/edit/{id}")
-    Student updateStudent(@Valid @RequestBody Student updatedStudent, @PathVariable Long id) {
+    Person updateStudent(@Valid @RequestBody Person updatedStudent, @PathVariable Long id) {
         return service.edit(updatedStudent);
     }
 

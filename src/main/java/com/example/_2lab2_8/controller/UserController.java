@@ -9,10 +9,10 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("users")
+//@RestController
+//@RequestMapping("users")
 public class UserController {
-    private UserService service;
+    private final UserService service;
 
     UserController(UserService service) {
         this.service=service;
