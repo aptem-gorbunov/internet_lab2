@@ -1,47 +1,68 @@
 package com.example._2lab2_8.controller;
 
+import com.example._2lab2_8.aop.LogAnnotation;
 import com.example._2lab2_8.entity.Person;
-import com.example._2lab2_8.entity.Student;
+import com.example._2lab2_8.entity.Role;
+import com.example._2lab2_8.entity.dto.MainPersonInfoDto;
 import com.example._2lab2_8.service.PersonService;
-import com.example._2lab2_8.service.StudentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
+//TODO: рекурсия в JSON: https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+
+//TODO: https://memorynotfound.com/spring-security-forgot-password-send-email-reset-password/
 
 @RestController
 @RequestMapping("people")
 public class PersonController {
+
     private final PersonService service;
 
     PersonController(PersonService service) {
         this.service=service;
     }
 
-    @GetMapping("/all")
-    List<Person> getAllStudents() {
-        return service.getAll();
+    @LogAnnotation
+    @GetMapping("/")
+    List<Person> getAll() {
+            return service.getAll();
     }
 
-    @PostMapping("/create")
+    @LogAnnotation
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    Person createStudent(@Valid @RequestBody Person newStudent) {
+    Person createPerson(@Valid @RequestBody Person newStudent) {
         return service.add(newStudent);
     }
 
+    @LogAnnotation
     @GetMapping("/{id}")
-    Optional<Person> getOneStudent(@PathVariable Long id) {
+    Person getOnePerson(@PathVariable Long id) {
+
         return service.findById(id);
+
     }
 
-    //TODO: не так, как должно было быть
-    @PutMapping("/edit/{id}")
-    Person updateStudent(@Valid @RequestBody Person updatedStudent, @PathVariable Long id) {
-        return service.edit(updatedStudent);
+
+    @LogAnnotation
+    @PutMapping("/{id}/main")
+    Person updateMainPersonInfo(@PathVariable Long id,  @RequestBody MainPersonInfoDto newInfo) {
+
+        Person personForUpdate = service.findById(id);
+
+        personForUpdate.setFirstName(newInfo.getFirstName());
+        personForUpdate.setSurname(newInfo.getSurname());
+        personForUpdate.setPatronymic(newInfo.getPatronymic());
+        personForUpdate.setAge(newInfo.getAge());
+
+        return service.edit(personForUpdate);
     }
 
+    @LogAnnotation
     @DeleteMapping("/{id}")
     void deleteStudent(@PathVariable Long id) {
         service.delete(id);
