@@ -1,15 +1,15 @@
 package com.example._2lab2_8.service;
 
-import com.example._2lab2_8.entity.Student;
+import com.example._2lab2_8.entity.Person;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IStudentService {
-    Optional<Student> findById(long id);
-    Student add(Student student);
-    void delete(long id);
-    //Student getByName(String name);
-    Student edit(Student student);
-    List<Student> getAll();
+
+    Person findById(long id);
+    Person add(Person person);
+    Person delete(long id);
+    Person edit(Person person);
+    List<Person> getAll();
+
 }

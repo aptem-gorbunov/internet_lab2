@@ -1,16 +1,26 @@
 package com.example._2lab2_8.service;
 
 import com.example._2lab2_8.entity.Person;
+import com.example._2lab2_8.entity.Role;
+import com.example._2lab2_8.exception.CannotFindPersonByEmail;
+import com.example._2lab2_8.exception.CannotFindPersonByUsername;
+import com.example._2lab2_8.exception.PersonNotFound;
 import com.example._2lab2_8.repository.PersonRepository;
-import com.example._2lab2_8.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PersonService implements IPersonService {
+public class PersonService implements IPersonService, UserDetailsService {
 
     private PersonRepository repository;
 
@@ -20,8 +30,8 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public Optional<Person> findById(long id) {
-        return repository.findById(id);
+    public Person findById(long id) {
+        return repository.findById(id).orElseThrow(PersonNotFound::new);
     }
 
     @Override
@@ -30,8 +40,10 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public void delete(long id) {
+    public Person delete(long id) {
+        Person personById = repository.findById(id).orElseThrow(PersonNotFound::new);
         repository.deleteById(id);
+        return personById;
     }
 
     @Override
@@ -42,5 +54,49 @@ public class PersonService implements IPersonService {
     @Override
     public List<Person> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Optional<Person> findByUsername(String username) {
+
+        return repository.getPersonByUsername(username);
+    }
+
+    @Override
+    public Optional<Person> findByEmail(String email) {
+
+        return repository.getPersonByEmail(email);
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    public Boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+
+        Person user = repository.getPersonByUsername(s).orElseThrow(CannotFindPersonByUsername::new);
+
+        Role userRole = user.getRole();
+
+        List<SimpleGrantedAuthority> authorities = Collections.emptyList();
+
+        if (userRole != null) {
+            authorities = Arrays.asList(new SimpleGrantedAuthority(userRole.toString()));
+        }
+
+        return new User(user.getUsername(), user.getPassword(), authorities);
+
+        //User user = new User("admin", "password", Arrays.asList(new SimpleGrantedAuthority("ADMIN")));
+
+        //return user;
+
+        //return null;//new User()
     }
 }

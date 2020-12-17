@@ -2,6 +2,7 @@ package com.example._2lab2_8.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,21 +18,29 @@ public class Mark implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private TeacherSubject teacherSubject;
+//    @ManyToOne(optional = false)
+//    private TeacherSubject teacherSubject;
 
     @ManyToOne(optional = false)
-    private Student student;
+    private Person student;
 
+    @ManyToOne(optional = false)
+    private Person teacher;
+
+    @ManyToOne(optional = false)
+    private Subject subject;
+
+    @Range(min = 2, max = 10, message = "Mark value should be between 2 and 10")
     private int mark;
 
     public Mark() {
     }
 
-    public Mark(Long id, TeacherSubject teacherSubject, Student student, int mark) {
+    public Mark(Long id, Person student, Person teacher, Subject subject, int mark) {
         this.id = id;
-        this.teacherSubject = teacherSubject;
         this.student = student;
+        this.teacher = teacher;
+        this.subject = subject;
         this.mark = mark;
     }
 
@@ -43,20 +52,28 @@ public class Mark implements Serializable {
         this.id = id;
     }
 
-    public TeacherSubject getTeacherSubject() {
-        return teacherSubject;
-    }
-
-    public void setTeacherSubject(TeacherSubject teacherSubject) {
-        this.teacherSubject = teacherSubject;
-    }
-
-    public Student getStudent() {
+    public Person getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(Person student) {
         this.student = student;
+    }
+
+    public Person getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Person teacher) {
+        this.teacher = teacher;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public int getMark() {
