@@ -1,8 +1,7 @@
 package com.example._2lab2_8.controller;
 
-import com.example._2lab2_8.entity.Student;
+import com.example._2lab2_8.aop.LogAnnotation;
 import com.example._2lab2_8.entity.Subject;
-import com.example._2lab2_8.service.StudentService;
 import com.example._2lab2_8.service.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,28 +19,35 @@ public class SubjectController {
         this.service=service;
     }
 
-    @GetMapping("/all")
+    @LogAnnotation
+    @GetMapping("/")
     List<Subject> getAll() {
         return service.getAll();
     }
 
-    @PostMapping("/create")
+    @LogAnnotation
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     Subject create(@Valid @RequestBody Subject newStudent) {
         return service.add(newStudent);
     }
 
+    @LogAnnotation
     @GetMapping("/{id}")
-    Optional<Subject> getOne(@PathVariable Long id) {
+    Subject getOne(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    //TODO: !!!не так, как должно было быть (надо как-то использовать id (а, может быть, и не нужно))
-    @PutMapping("/edit/{id}")
-    Subject updateOne(@Valid @RequestBody Subject updatedStudent, @PathVariable Long id) {
-        return service.edit(updatedStudent);
+    @LogAnnotation
+    @PutMapping("/{id}")
+    Subject updateOne(@Valid @RequestBody Subject newSubjectInfo, @PathVariable Long id) {
+
+        Subject subjectToUpdate = service.findById(id);
+        subjectToUpdate.setName(newSubjectInfo.getName());
+        return service.edit(subjectToUpdate);
     }
 
+    @LogAnnotation
     @DeleteMapping("/{id}")
     void deleteStudent(@PathVariable Long id) {
         service.delete(id);

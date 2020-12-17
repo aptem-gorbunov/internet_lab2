@@ -1,51 +1,69 @@
 package com.example._2lab2_8.service;
 
-import com.example._2lab2_8.entity.Student;
-import com.example._2lab2_8.repository.StudentRepository;
+import com.example._2lab2_8.entity.Person;
+import com.example._2lab2_8.entity.Role;
+import com.example._2lab2_8.exception.PersonIsNotStudent;
+import com.example._2lab2_8.exception.PersonNotFound;
+import com.example._2lab2_8.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService implements IStudentService{
 
-    private StudentRepository repository;
+    private PersonRepository repository;
 
     @Autowired
-    public void setRepository(StudentRepository repository) {
+    public void setRepository(PersonRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Optional<Student> findById(long id) {
-        return repository.findById(id);
+    public Person findById(long id) {
+        Person personById = repository.findById(id).orElseThrow(PersonNotFound::new);
+
+        if (personById.getRole() != Role.ROLE_STUDENT) {
+            throw new PersonIsNotStudent();
+        }
+        else {
+            return personById;
+        }
     }
 
     @Override
-    public Student add(Student student) {
-        //TODO: flush, чтобы данные сразу попали в БД
-        return repository.saveAndFlush(student);
+    public Person add(Person person) {
+        person.setRole(Role.ROLE_STUDENT);
+        return repository.saveAndFlush(person);
     }
 
     @Override
-    public void delete(long id) {
-        repository.deleteById(id);
-    }
+    public Person delete(long id) {
+        Person personById = repository.findById(id).orElseThrow(PersonNotFound::new);
 
-//    @Override
-//    public Student getByName(String name) {
-//        return studentRepository.findOne(st->)
-//    }
-
-    @Override
-    public Student edit(Student student) {
-        return repository.saveAndFlush(student);
+        if (personById.getRole() != Role.ROLE_STUDENT) {
+            throw new PersonIsNotStudent();
+        }
+        else {
+            repository.deleteById(id);
+            return personById;
+        }
     }
 
     @Override
-    public List<Student> getAll() {
-        return repository.findAll();
+    public Person edit(Person person) {
+        person.setRole(Role.ROLE_TEACHER);
+        return repository.saveAndFlush(person);
     }
+
+    @Override
+    public List<Person> getAll() {
+        return repository.findAll().stream()
+                .filter(person -> person.getRole() == Role.ROLE_STUDENT)
+                .collect(Collectors.toList());
+    }
+
+
 }
